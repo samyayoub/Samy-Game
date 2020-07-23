@@ -8,8 +8,7 @@ canvas {
 	display: block;
 	margin: 0 auto;
 	width: auto;
-	height: 480px;
-	/* margin-top: 3%; */
+	height: 600px;
 }
 
 #score {
@@ -18,3 +17,12 @@ canvas {
 	width: auto;
 	height: 50px;
 }
+/* 
+body {
+	height: 100%;
+}
+#myCanvas {
+	display: block;
+	height: 500px;
+	width: auto;
+} */

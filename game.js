@@ -31,6 +31,13 @@ var ground = [];
 for (var i = 0; i < brickColumns; i++) {
 	ground[i] = { x: 0, y: 0 };
 }
+var tempIllusion = -9;
+
+// Obstacle Variables
+var obstacleX = canvasWidth;
+var obstacleY = canvasHeight - 2 * brickSize;
+var obstacleSize = 36;
+var obstacleHeight;
 
 // Game Variables
 var curFrame = 0;
@@ -40,7 +47,6 @@ var left = false;
 var right = true;
 
 var speed = 12;
-var game = true;
 
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
@@ -52,7 +58,6 @@ var brick = new Image();
 brick.src = "images/brick.png";
 
 // Function to give illusion of moving ground
-var tempIllusion = -9;
 function drawGround() {
 	tempIllusion = -tempIllusion;
 	for (let i = 0; i < ground.length; i++) {
@@ -60,12 +65,21 @@ function drawGround() {
 		ctx.drawImage(
 			brick,
 			i * brickSize + tempIllusion,
-			canvasHeight - 30,
+			canvasHeight - brickSize,
 			brickSize,
 			brickSize
 		);
 	}
 	window.requestAnimationFrame(drawGround);
+}
+
+// Function to draw Obstacle
+function drawObstacle() {
+	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+	obstacleX -= 18;
+	ctx.drawImage(brick, obstacleX, obstacleY, obstacleSize, obstacleSize);
+
+	// window.requestAnimationFrame(drawObstacle);
 }
 
 // Function to update the frames
@@ -102,6 +116,7 @@ function keyDownHandler(e) {
 function draw() {
 	updateFrame();
 	drawGround();
+	drawObstacle();
 
 	// Draw character
 	ctx.drawImage(character, srcX, srcY, width, height, x, y, width, height);

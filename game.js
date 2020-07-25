@@ -57,6 +57,11 @@ character.src = "images/character.png";
 var brick = new Image();
 brick.src = "images/brick.png";
 
+// Function to draw character
+function drawCharacter() {
+	ctx.drawImage(character, srcX, srcY, width, height, x, y, width, height);
+}
+
 // Function to give illusion of moving ground
 function drawGround() {
 	tempIllusion = -tempIllusion;
@@ -104,24 +109,36 @@ function updateFrame() {
 
 // Function to handle keyboard buttons pressed
 function keyDownHandler(e) {
-	if (e.key == "Right" || e.key == "ArrowRight") {
-		right = true;
-		left = false;
-	} else if (e.key == "Left" || e.key == "ArrowLeft") {
-		right = false;
-		left = true;
+	if (e.keyCode == 38) {
+		y -= 100;
+		x += 150;
 	}
+
+	// if (e.key == "Right" || e.key == "ArrowRight") {
+	// 	right = true;
+	// 	left = false;
+	// } else if (e.key == "Left" || e.key == "ArrowLeft") {
+	// 	right = false;
+	// 	left = true;
+	// }
 }
 
 function draw() {
 	updateFrame();
-	drawGround();
-	drawObstacle();
 
-	// Draw character
-	ctx.drawImage(character, srcX, srcY, width, height, x, y, width, height);
+	drawObstacle();
+	drawGround();
+	drawCharacter();
+
+	// Return character to the original position
+	y = 200;
+	if (x != 100) {
+		for (let i = 0; i < 15; i++) {
+			x--;
+		}
+	}
 }
 
-setInterval(draw, 100);
+setInterval(draw, 130);
 
 document.addEventListener("keydown", keyDownHandler, false);

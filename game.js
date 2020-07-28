@@ -54,7 +54,9 @@ var right = true;
 
 var speed = 12;
 
-var level = 5;
+var level = 1;
+var score = 0;
+var lives = 3;
 
 // Load images in variables
 var character = new Image();
@@ -149,7 +151,8 @@ function detectCollision() {
 		characterCoordinates.y + characterHeight >=
 			obstacleCoordinates.y + obstacleSize
 	) {
-		alert("hit");
+		lives--;
+		alert("Better watch out!!");
 	}
 }
 
@@ -168,6 +171,27 @@ function detectGameLevel() {
 	}
 }
 
+// Function to show level
+function drawLevel() {
+	ctx.fillStyle = "white";
+	ctx.font = "15px Times one";
+	ctx.fillText("Level: " + level, canvasWidth - 75, 25);
+}
+
+// Function to show score
+function drawScore() {
+	ctx.fillStyle = "white";
+	ctx.font = "15px Times one";
+	ctx.fillText("Score: " + score, 25, 25);
+}
+
+// Function to show lives
+function drawLives() {
+	ctx.fillStyle = "white";
+	ctx.font = "15px Times one";
+	ctx.fillText("Lives: " + lives, canvasWidth / 2, 25);
+}
+
 // Function to draw everything
 function draw() {
 	updateFrame();
@@ -177,6 +201,9 @@ function draw() {
 	drawGround();
 	drawCharacter();
 	detectCollision();
+	drawLevel();
+	drawScore();
+	drawLives();
 
 	// Return character to the original position
 	characterCoordinates.y = 200;

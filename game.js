@@ -5,9 +5,12 @@ var ctx = canvas.getContext("2d");
 var canvasWidth = 720;
 var canvasHeight = 350;
 
+canvas.width = canvasWidth;
+canvas.height = canvasHeight;
+
 // Character Variables
-var characterWidth = 864;
-var characterHeight = 280;
+var characterImageWidth = 864;
+var characterImageHeight = 280;
 
 var characterRows = 2;
 var characterColumns = 8;
@@ -15,11 +18,13 @@ var characterColumns = 8;
 var trackRight = 0;
 var trackLeft = 1;
 
-var width = characterWidth / characterColumns;
-var height = characterHeight / characterRows;
+var characterWidth = characterImageWidth / characterColumns;
+var characterHeight = characterImageHeight / characterRows;
 
-var x = 100;
-var y = 200;
+var characterCoordinates = {
+	x: 100,
+	y: 200,
+};
 
 var srcX;
 var srcY;
@@ -34,10 +39,11 @@ for (var i = 0; i < brickColumns; i++) {
 var tempIllusion = -9;
 
 // Obstacle Variables
-var obstacleX = canvasWidth;
-var obstacleY = canvasHeight - 2 * brickSize;
+var obstacleCoordinates = {
+	x: canvasWidth,
+	y: canvasHeight - 2 * brickSize,
+};
 var obstacleSize = 36;
-var obstacleHeight;
 
 // Game Variables
 var curFrame = 0;
@@ -48,8 +54,7 @@ var right = true;
 
 var speed = 12;
 
-canvas.width = canvasWidth;
-canvas.height = canvasHeight;
+var level = 5;
 
 // Load images in variables
 var character = new Image();
@@ -59,7 +64,17 @@ brick.src = "images/brick.png";
 
 // Function to draw character
 function drawCharacter() {
-	ctx.drawImage(character, srcX, srcY, width, height, x, y, width, height);
+	ctx.drawImage(
+		character,
+		srcX,
+		srcY,
+		characterWidth,
+		characterHeight,
+		characterCoordinates.x,
+		characterCoordinates.y,
+		characterWidth,
+		characterHeight
+	);
 }
 
 // Function to give illusion of moving ground
@@ -81,64 +96,97 @@ function drawGround() {
 // Function to draw Obstacle
 function drawObstacle() {
 	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-	obstacleX -= 18;
-	ctx.drawImage(brick, obstacleX, obstacleY, obstacleSize, obstacleSize);
-
-	// window.requestAnimationFrame(drawObstacle);
+	obstacleCoordinates.x -= 18;
+	ctx.drawImage(
+		brick,
+		obstacleCoordinates.x,
+		obstacleCoordinates.y,
+		obstacleSize,
+		obstacleSize
+	);
 }
 
 // Function to update the frames
 function updateFrame() {
 	curFrame = ++curFrame % frameCount;
-	ctx.clearRect(x, y, width, height);
+	ctx.clearRect(
+		characterCoordinates.x,
+		characterCoordinates.y,
+		characterWidth,
+		characterHeight
+	);
 
 	// Update variables to show character as running
-	srcX = curFrame * width;
-	srcY = trackRight * height;
+	srcX = curFrame * characterWidth;
+	srcY = trackRight * characterHeight;
 
 	// Move character right or left based on keyboard input
-	// if (left && x > 0) {
-	// 	srcY = trackLeft * height;
-	// 	x -= speed;
+	// if (left && characterCoordinates.x > 0) {
+	// 	srcY = trackLeft * characterHeight;
+	// 	characterCoordinates.x -= speed;
 	// }
-	// if (right && x < canvasWidth - width) {
-	// srcY = trackRight * height;
-	// 	x += speed;
+	// if (right && characterCoordinates.x < canvasWidth - characterWidth) {
+	// srcY = trackRight * characterHeight;
+	// 	characterCoordinates.x += speed;
 	// }
 }
 
 // Function to handle keyboard buttons pressed
 function keyDownHandler(e) {
 	if (e.keyCode == 38) {
-		y -= 100;
-		x += 150;
+		characterCoordinates.x += 150;
+		characterCoordinates.y -= 100;
 	}
-
-	// if (e.key == "Right" || e.key == "ArrowRight") {
-	// 	right = true;
-	// 	left = false;
-	// } else if (e.key == "Left" || e.key == "ArrowLeft") {
-	// 	right = false;
-	// 	left = true;
-	// }
 }
 
+// Function to determine if character hit obstacle
+function detectCollision() {
+	if (
+		characterCoordinates.x + characterWidth >= obstacleCoordinates.x &&
+		characterCoordinates.x + characterWidth <
+			obstacleCoordinates.x + obstacleSize &&
+		characterCoordinates.y + characterHeight >= obstacleCoordinates.y &&
+		characterCoordinates.y + characterHeight >=
+			obstacleCoordinates.y + obstacleSize
+	) {
+		alert("hit");
+	}
+}
+
+function detectGameLevel() {
+	// Determine the level of the game
+	if (level === 1) {
+		obstacleCoordinates.x -= 18;
+	} else if (level === 2) {
+		obstacleCoordinates.x -= 25;
+	} else if (level === 3) {
+		obstacleCoordinates.x -= 30;
+	} else if (level === 4) {
+		obstacleCoordinates.x -= 35;
+	} else if (level === 5) {
+		obstacleCoordinates.x -= 40;
+	}
+}
+
+// Function to draw everything
 function draw() {
 	updateFrame();
 
+	detectGameLevel();
 	drawObstacle();
 	drawGround();
 	drawCharacter();
+	detectCollision();
 
 	// Return character to the original position
-	y = 200;
-	if (x != 100) {
-		for (let i = 0; i < 15; i++) {
-			x--;
+	characterCoordinates.y = 200;
+	if (characterCoordinates.x != 100) {
+		for (let i = 0; i < 5; i++) {
+			characterCoordinates.x--;
 		}
 	}
 }
 
-setInterval(draw, 130);
+setInterval(draw, 110);
 
 document.addEventListener("keydown", keyDownHandler, false);

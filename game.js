@@ -153,6 +153,11 @@ function detectCollision() {
 	) {
 		lives--;
 		alert("Better watch out!!");
+	} else if (
+		characterCoordinates.x + characterWidth >=
+		obstacleCoordinates.x
+	) {
+		score++;
 	}
 }
 
